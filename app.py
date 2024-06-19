@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 from tensorflow.keras.models import load_model
+from keras.preprocessing.image import img_to_array
 from PIL import Image
 from ultralytics import YOLO
 import base64
@@ -28,7 +29,7 @@ emotion_model = load_model('models/emotion_model.h5')
 # Labels on Age, Gender and Emotion to be predicted
 age_ranges = ['1-2', '3-9', '10-20', '21-27', '28-45', '46-65', '66-116']
 gender_ranges = ['male', 'female']
-emotion_ranges = ['positive', 'negative', 'neutral']
+emotion_ranges = ['Angry','Disgust','Fear','Happy','Neutral', 'Sad', 'Surprise']
 
 def get_face_detections(image):
     if image is None or not isinstance(image, np.ndarray):
@@ -72,9 +73,13 @@ def predict():
 
         # sửa lại preprocessing chỗ này
         emotion_img = cv2.resize(face_img, (48, 48), interpolation = cv2.INTER_AREA)
-        emotion_image_array = np.array(emotion_img)
-        emotion_input = np.expand_dims(emotion_image_array, axis=0)
-        output_emotion= emotion_ranges[np.argmax(emotion_model.predict(emotion_input))]
+        if np.sum([emotion_img])!=0:
+                roi = emotion_img.astype('float')/255.0
+                roi = img_to_array(roi)
+                roi = np.expand_dims(roi,axis=0)
+
+                prediction = emotion_model.predict(roi)[0]
+                output_emotion=emotion_ranges[prediction.argmax()]
         
         gender_img = cv2.resize(face_img, (100, 100), interpolation = cv2.INTER_AREA)
         gender_image_array = np.array(gender_img)
