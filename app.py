@@ -12,9 +12,8 @@ import base64
 
 
 app = Flask(__name__)
-# Thiết lập timeout cho các request
-app.config['PERMANENT_SESSION_LIFETIME'] = 600  # Timeout 10 phút
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 600  # Timeout 10 phút
+app.config['PERMANENT_SESSION_LIFETIME'] = 600 
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 600 
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
@@ -71,7 +70,6 @@ def predict():
     for (x, y, w, h) in face_detections:        
         face_img = gray_image[y:y+h, x:x+w]
 
-        # sửa lại preprocessing chỗ này
         emotion_img = cv2.resize(face_img, (48, 48), interpolation = cv2.INTER_AREA)
         if np.sum([emotion_img])!=0:
                 roi = emotion_img.astype('float')/255.0
@@ -120,7 +118,6 @@ def handle_image(data):
     for (x, y, w, h) in face_detections:
         face_img = gray_image[y:y+h, x:x+w]
 
-        # sửa lại preprocessing chỗ này
         emotion_img = cv2.resize(face_img, (48, 48), interpolation=cv2.INTER_AREA)
         emotion_image_array = np.array(emotion_img)
         emotion_input = np.expand_dims(emotion_image_array, axis=0)
