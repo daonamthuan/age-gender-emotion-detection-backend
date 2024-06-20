@@ -22,7 +22,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 yolo_model = YOLO('yolov8n_face.pt')
 
 # Load the age, gender, and emotion models
-age_model = load_model('models/age_model.h5')
+age_model = load_model('models/age_model.keras')
 gender_model = load_model('models/gender_model.h5')
 emotion_model = load_model('models/emotion_model.h5')
 
