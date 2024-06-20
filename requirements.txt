@@ -1,0 +1,9 @@
+flask
+flask_cors
+flask_socketio
+tensorflow
+numpy
+ultralytics
+opencv-python-headless
+Pillow
+keras
